@@ -2,9 +2,9 @@
 
 .. code:: bash
 
-   make
-   mkdir -p plone/filestorage
-   cd plone
+   make build
+   mkdir -p var/filestorage
+   cd var
    nix-build ../zconfig/instance.nix -o zope.conf
-   ../result/bin/plonecli instance -C zope.conf run ../admin.py
-   ../result/bin/plonecli instance -C zope.conf fg
+   ../build/bin/plonecli instance -C zope.conf run ../admin.py
+   ../build/bin/plonecli instance -C zope.conf fg
