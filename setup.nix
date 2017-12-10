@@ -12,14 +12,15 @@
     sha256 = "1iw3ib6zwgyqnyr9gapsrmwprawws8k331cb600724ddv30xrpkg";
   })
 , overrides ? import ./overrides.nix { inherit pkgs pythonPackages; }
+, src ? ./.
+, image_name ? "plone"
+, image_tag ? "latest"
 }:
 
 setup {
-  inherit pkgs pythonPackages overrides;
-  src = ./.;
+  inherit pkgs pythonPackages overrides src;
   force = true;
-
-  image_name = "plone";
+  inherit image_name image_tag;
   image_entrypoint = "/bin/plonecli";
 }
 

@@ -247,5 +247,5 @@ zope.testing==3.9.7
 zope.traversing==4.1.0
 zope.untrustedpython==4.0.0
 zope.viewlet==3.7.2
-https://github.com/plone/plonecli/archive/datakurre-zopectl.tar.gz#egg=plonecli
 https://github.com/MrTango/click/archive/master.tar.gz#egg=Click
+plonecli==0.1.0a4

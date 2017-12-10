@@ -3299,8 +3299,8 @@ self: super: {
       self."zest.releaser"
     ];
     src = fetchurl {
-      url = "https://github.com/plone/plonecli/archive/datakurre-zopectl.tar.gz";
-      sha256 = "0drmk68p26307d8r459xlmqssmdifwd483shnpm57sfcnmj2snj4";
+      url = "https://pypi.python.org/packages/aa/8c/da651d9859805f6600aec3b31cb60f24b91d55d4bf28596c8b2211a4b0f6/plonecli-0.1.0a4.tar.gz";
+      sha256 = "0kj47cfaywzi9nf6w2m16wkpjrca9f8rj8h8irzinzzpn2175j61";
     };
   };
   "plonetheme.barceloneta" = super.buildPythonPackage {
