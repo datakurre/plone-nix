@@ -1,7 +1,7 @@
 { pkgs ? import <nixpkgs> {}
 , generators ? import ./generators.nix {}
 , instancehome ? import ./instancehome.nix {}
-, var ? "/plone"
+, var ? "$(PWD)"
 }:
 
 let configuration = generators.toZConfig {
@@ -21,11 +21,10 @@ let configuration = generators.toZConfig {
 
   environment = {
     CHAMELEON_CACHE = "/tmp";
-    zope_i18n_compile_mo_files = true;
-    zope_i18n_allowed_languages = ["en" "fi" "sv" "de"];
-    PTS_LANGUAGES = ["en" "fi" "sv" "de"];
-    PLONE_X_FRAME_OPTIONS = "";
-    TMP = "${var}";
+    PTS_LANGUAGES = [ "en" ];
+    TMP = "/tmp";
+    Z3C_AUTOINCLUDE_DEPENDENCIES_DISABLED = true;
+    zope_i18n_allowed_languages = [ "en" ];
   };
 
   warnfilter = {

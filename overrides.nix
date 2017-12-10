@@ -3,6 +3,12 @@
 self: super:  {
   Pillow = super.pillow;
 
+  "BTrees" = super."BTrees".overridePythonAttrs (old: {
+    installFlags = [ "--no-deps" ];
+    buildInputs = [ self."persistent" self."zope.interface" ];
+    propagatedBuildInputs = [];
+  });
+
   "eggtestinfo" = super.buildPythonPackage {
     name = "eggtestinfo-0.3";
     src = pkgs.fetchurl {
@@ -18,8 +24,8 @@ self: super:  {
     src = pkgs.fetchFromGitHub {
       owner = "plone";
       repo = "plonecli";
-      rev = "c6dd010e2a5c6268842e7d81f743451c3c7dd57b";
-      sha256 = "09hr6q5x8f5lysr3dp8s7y4mvd2sxbdpfsdqbmzh1qq8q6xppxgp";
+      rev = "2070a22cb01c411fcff4e1354ccfc5bb68b4ef89";
+      sha256 = "10izl11cz70lnn6ycq8rv32gqkgfnp5yvs300rgql5dlg3pz58w0";
     };
   });
 
@@ -50,6 +56,12 @@ self: super:  {
   "Products.GenericSetup" = super."Products.GenericSetup".overridePythonAttrs (old: {
     installFlags = [ "--no-deps" ];
     buildInputs = [ self."eggtestinfo" ];
+    propagatedBuildInputs = [];
+  });
+
+  "zope.security" = super."zope.security".overridePythonAttrs (old: {
+    installFlags = [ "--no-deps" ];
+    buildInputs = [ self."zope.interface" self."zope.proxy" ];
     propagatedBuildInputs = [];
   });
 
