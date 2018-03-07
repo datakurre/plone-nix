@@ -5,4 +5,4 @@ build: requirements.nix
 
 requirements.nix: requirements.txt
 	nix-shell setup.nix -A pip2nix \
-	  --run "pip2nix generate -r requirements.txt --output=requirements.nix"
+	  --run "pip2nix generate -r requirements-5.1.0.txt -r requirements.txt --output=requirements.nix"
