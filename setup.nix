@@ -1,17 +1,12 @@
-#{ pkgs ? import ((import <nixpkgs> {}).pkgs.fetchFromGitHub {
-#  owner = "NixOS";
-#  repo = "nixpkgs";
-#  rev = "4759056cf1290057845c7aa748c516be6a7e41d4";
-#  sha256 = "1169qavgxspnb74j30gkjbf1fxp46q96d97r56n69dmg35nfy2r9";
-#}) {}
-{ pkgs ? import <nixpkgs> {}
-, pythonPackages ? pkgs.pythonPackages
-, setup ? import (pkgs.fetchFromGitHub {
-    owner = "datakurre";
-    repo = "setup.nix";
-    rev = "b1bfe61cd2f60f5446c8e3e74e99663fdbbaf7f6";
-    sha256 = "1iw3ib6zwgyqnyr9gapsrmwprawws8k331cb600724ddv30xrpkg";
-  })
+{ pkgs ? import (fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs-channels/archive/749a3a0d00b5d4cb3f039ea53e7d5efc23c296a2.tar.gz";
+    sha256 = "14dqndpxa4b3d3xnzwknjda21mm3p0zmk8jbljv66viqj5plvgdw";
+  }) {}
+, setup ? import (fetchTarball {
+    url = "https://github.com/datakurre/setup.nix/archive/9f8529e003ea4d2f433d2999dc50b8938548e7d0.tar.gz";
+    sha256 = "15qzhz28jvgkna5zv7pj0gfnd0vcvafpckxcp850j64z7761apnm";
+ })
+, pythonPackages ? pkgs.python2Packages
 , overrides ? import ./overrides.nix { inherit pkgs pythonPackages; }
 , src ? ./.
 , image_name ? "plone"
