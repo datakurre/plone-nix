@@ -176,7 +176,7 @@ soupsieve==1.9.3
 tempstorage==5.1
 transaction==2.4.0
 urllib3==1.25.7
-waitress==1.4.2
+waitress==1.4.3
 z3c.autoinclude==0.3.9
 z3c.caching==2.2
 z3c.form==3.7.0
