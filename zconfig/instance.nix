@@ -6,6 +6,7 @@
 
 let configuration = generators.toZConfig {
 
+  effective-user = "nobody";
   clienthome = "${var}";
   debug-mode = false;
   default-zpublisher-encoding = "utf-8";
@@ -21,15 +22,14 @@ let configuration = generators.toZConfig {
 
   environment = {
     CHAMELEON_CACHE = "/tmp";
-    PTS_LANGUAGES = [ "en" ];
+    PTS_LANGUAGES = [ "en" "fi" ];
     TMP = "/tmp";
-    Z3C_AUTOINCLUDE_DEPENDENCIES_DISABLED = true;
-    zope_i18n_allowed_languages = [ "en" ];
+    zope_i18n_allowed_languages = [ "en" "fi" ];
   };
 
   warnfilter = {
     action = "ignore";
-    category = "exceptions.DeprecationWarning";
+    category = "DeprecationWarning";
   };
 
   eventlog = {

@@ -1,5 +1,6 @@
-Click
-plonecli
-pytest-runner
-setuptools-scm
-vcversioner
+https://github.com/datakurre/plonectl/archive/f61be6b50918dfd7227b93262f7aa46b1c222a28.tar.gz#egg=plonectl
+https://github.com/datakurre/ZServer/archive/c2665672f82460808c029aa788b73170fada5fb2.tar.gz#egg=ZServer
+
+collective.folderishtypes[dexterity]==3.0.0
+collective.gelf==0.9.2
+pas.plugins.ldap==1.7.2

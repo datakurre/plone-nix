@@ -1,26 +1,60 @@
-.PHONY: all
-all: build
+# Requires .netrc file with
+#
+# machine repo.kopla.jyu.fi
+# login username
+# password secret
 
-.PHONY: build
-build: requirements.nix
-	nix-build setup.nix -A env -o build
+INDEX_URL ?= https://pypi.org/simple
+INDEX_HOSTNAME ?=
+PYPI_USERNAME ?=
+PYPI_PASSWORD ?=
 
-requirements.nix: requirements.txt requirements-manual.txt
-	@nix-shell -p libffi \
-	--run 'nix-shell setup.nix -A pip2nix \
-	--run "pip2nix generate -r requirements.txt -r requirements-manual.txt --output=requirements.nix"'
+BUILDOUT_CFG ?= buildout.cfg
+BUILDOUT_ARGS ?= -N
+
+PYTHON ?= python37
+NIX_OPTIONS ?= --pure --argstr python $(PYTHON)
+REF_NIXPKGS = branches nixos-20.03
+
+.netrc:
+	@if [ -f ~/.netrc ]; then ln -s ~/.netrc .; else \
+	  echo machine ${INDEX_HOSTNAME} > .netrc && \
+	  echo login ${PYPI_USERNAME} >> .netrc && \
+	  echo password ${PYPI_PASSWORD} >> .netrc; \
+	fi
+
+netrc: .netrc
+	@ln -s .netrc netrc
+
+.PHONY: requirements
+requirements: requirements-$(PYTHON).nix
+
+requirements-$(PYTHON).nix: requirements-$(PYTHON).txt requirements-manual.txt
+	HOME=$(PWD) NIX_CONF_DIR=$(PWD) \
+	nix-shell release.nix $(NIX_OPTIONS) -A pip2nix --run "HOME=$(PWD) NIX_CONF_DIR=$(PWD) pip2nix generate -r requirements-$(PYTHON).txt -r requirements-manual.txt --index-url $(INDEX_URL) --output=requirements-$(PYTHON).nix"
+
+requirements-$(PYTHON).txt: requirements.txt
+	HOME=$(PWD) NIX_CONF_DIR=$(PWD) \
+	nix-shell release.nix $(NIX_OPTIONS) -A pip2nix --run "HOME=$(PWD) NIX_CONF_DIR=$(PWD) pip2nix generate -r requirements.txt --index-url $(INDEX_URL) --output=requirements-$(PYTHON).nix"
+	@grep "pname =\|version =" requirements-$(PYTHON).nix|awk "ORS=NR%2?FS:RS"|sed 's|.*"\(.*\)";.*version = "\(.*\)".*|\1==\2|' > requirements-$(PYTHON).txt
+
+requirements.txt: buildout.cfg
+	nix-shell $(NIX_OPTIONS) --run "buildout -c $(BUILDOUT_CFG) $(BUILDOUT_ARGS)"
 
 .PHONY: upgrade
 upgrade:
-	@echo "Updating nixpkgs unstable revision"; \
-	rev=$$(curl https://api.github.com/repos/NixOS/nixpkgs-channels/branches/nixos-18.09|jq -r .commit.sha); \
-	echo "Updating nixpkgs $$rev hash"; \
+	nix-shell --pure -p cacert curl gnumake jq nix --run "make release.nix"
+
+.PHONY: release.nix
+release.nix:
+	@set -e pipefail; \
+	echo "Updating nixpkgs @ setup.nix using $(REF_NIXPKGS)"; \
+	rev=$$(curl https://api.github.com/repos/NixOS/nixpkgs-channels/$(firstword $(REF_NIXPKGS)) \
+		| jq -er '.[]|select(.name == "$(lastword $(REF_NIXPKGS))").commit.sha'); \
+	echo "Latest commit sha: $$rev"; \
 	sha=$$(nix-prefetch-url --unpack https://github.com/NixOS/nixpkgs-channels/archive/$$rev.tar.gz); \
-	sed -i "2s|.*|    url = \"https://github.com/NixOS/nixpkgs-channels/archive/$$rev.tar.gz\";|" setup.nix; \
-	sed -i "3s|.*|    sha256 = \"$$sha\";|" setup.nix; \
-	echo "Updating setup.nix version"; \
-	rev=$$(curl https://api.github.com/repos/datakurre/setup.nix/branches/master|jq -r ".commit.sha"); \
-	echo "Updating setup.nix $$rev hash"; \
-	sha=$$(nix-prefetch-url --unpack https://github.com/datakurre/setup.nix/archive/$$rev.tar.gz); \
-	sed -i "6s|.*|    url = \"https://github.com/datakurre/setup.nix/archive/$$rev.tar.gz\";|" setup.nix; \
-	sed -i "7s|.*|    sha256 = \"$$sha\";|" setup.nix
+	sed -i \
+		-e "2s|.*|    # $(REF_NIXPKGS)|" \
+		-e "3s|.*|    url = \"https://github.com/NixOS/nixpkgs-channels/archive/$$rev.tar.gz\";|" \
+		-e "4s|.*|    sha256 = \"$$sha\";|" \
+		release.nix

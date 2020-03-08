@@ -4,20 +4,12 @@ Plone on Nix
 
 *”I know what I'm doing...”*
 
-Building and running a Plone instance:
+Building and running a Docker image:
 
 .. code:: bash
 
-   make build
-   mkdir -p var/filestorage
-   cd var
-   nix-build ../zconfig/instance.nix -o zope.conf
-   ../build/bin/plonecli instance -C zope.conf run ../admin.py
-   ../build/bin/plonecli instance -C zope.conf fg
-
-Building a Docker image:
+   docker load < $(nix-build release.nix -A image)
 
 .. code:: bash
 
-   nix-build setup.nix -A bdist_docker
-   docker load < result
+   docker run --rm -ti -p 8080:8080
