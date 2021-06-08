@@ -53,7 +53,7 @@ ZConfig==3.5.0
 ZEO==5.2.1
 ZODB==5.5.1
 ZODB3==3.11.0
-Zope==4.1.3
+Zope==5.2.1
 Zope2==4.0
 attrs==19.3.0
 beautifulsoup4==4.8.0
