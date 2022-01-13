@@ -11,7 +11,7 @@ Missing==4.1
 MultiMapping==4.1
 PasteDeploy==2.0.1
 Persistence==3.0
-Pillow==7.0.0
+Pillow==9.0.0
 Plone==5.2.1
 Products.BTreeFolder2==4.2
 Products.CMFCore==2.4.2
